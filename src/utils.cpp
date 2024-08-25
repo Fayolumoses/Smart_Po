@@ -76,7 +76,13 @@ int init_sensors(){
    }
 
   sht4.setPrecision(SHT4X_HIGH_PRECISION);
-  sht4.setHeater(SHT4X_NO_HEATER);  
+  sht4.setHeater(SHT4X_NO_HEATER); 
+
+  if (mySensor.begin() == false) {
+    return -3;
+  } 
+
+  mySensor.initAirQuality();
   return 0;
 }
 
@@ -91,7 +97,7 @@ double readADC(int adc_pin, int max_input, int min_input){
 }
 
 
-int lcd_progressbar(LiquidCrystal_I2C lcd, String Title, uint8_t percent, int width){
+int lcd_progressbar(String Title, uint8_t percent, int width){
   if(percent >100){
     return -1;
   }
@@ -160,7 +166,7 @@ bool Wifi_Connect(char * SSID, char * password, int Status_LED){
 
 }
 
-void displayWifiConnectFailed(LiquidCrystal_I2C lcd, String SSID){
+void displayWifiConnectFailed(String SSID){
   String width = "Wi-Fi ERROR";
   String text = "Could not connect to";
   lcd.clear();
@@ -279,3 +285,46 @@ void readWifiDetails(String data_in, wifi_router * wr){
   wr->pass = sub.substring(sub.indexOf('\"')+1,sub.lastIndexOf('\"'));
 }
 
+int getSavedWifiDetails(wifi_router * current_router){
+  if (!SPIFFS.begin()) {
+    return -1;
+  }
+
+  File file = SPIFFS.open("/wifi_settings.txt", "r");
+  if (!file) {
+    return -2;
+  }
+  while (file.available()) {
+    String wifi_settings = file.readString();
+    readWifiDetails(wifi_settings,current_router);
+  }
+
+  Serial.println();
+  file.close();
+
+  return 0;
+}
+
+void clear_screen(){
+  lcd.clear();
+}
+
+void init_pixel(){
+  pixel.begin(); 
+  pixel.setBrightness(20); 
+  pixel.setPixelColor(0, 0xFF0000);
+  pixel.show();
+}
+
+
+void display_message(String message){
+  lcd.clear();
+  lcd.setCursor(0, 1);
+  lcd.print("     STATUS");
+  lcd.setCursor(0, 2);
+  lcd.print(message);
+}
+
+IPAddress get_ip_address(){
+  return WiFi.localIP();
+}

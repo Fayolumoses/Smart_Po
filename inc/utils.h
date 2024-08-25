@@ -47,10 +47,10 @@ typedef struct{
   int read_sht_data(_sensors * sensor);
   int init_sensors();
   double readADC(int adc_pin, int max_input, int min_input);
-  int lcd_progressbar(LiquidCrystal_I2C lcd, String Title, uint8_t percent, int width);
+  int lcd_progressbar( String Title, uint8_t percent, int width);
   void printWifiStatus();
   bool Wifi_Connect(char * SSID, char * password, int Status_LED);
-  void displayWifiConnectFailed(LiquidCrystal_I2C lcd, String SSID);
+  void displayWifiConnectFailed(String SSID);
   void enableInternalPower();
   void disableInternalPower();
   void StartupPage(String version);
@@ -59,5 +59,11 @@ typedef struct{
   double map_float(int value, int from_high, int from_low, double to_high, double to_low);
   void display(dev_info *d, LiquidCrystal_I2C lcd, int read);
   void readWifiDetails(String data_in, wifi_router * wr);
+  int getSavedWifiDetails(wifi_router * current_router);
+  void clear_screen();
+  void init_pixel();
+  void display_connection_status(bool isConnected);
+  void display_message(String message);
+  IPAddress get_ip_address();
   
 #endif
