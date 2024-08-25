@@ -23,17 +23,10 @@ jobs:
           sketch-paths: |
             - ./
           libraries: |
-            - name: NetworkClientSecure
-            - name: Networking
-            - name: WiFi
-            - name: HTTPClient
             - name: Adafruit NeoPixel
             - name: LiquidCrystal I2C
-            - name: WebServer
-            - name: FS
             - name: Adafruit SHT4x Library
             - name: Adafruit BusIO
             - name: Adafruit Unified Sensor
             - name: SparkFun SGP30 Arduino Library
-            - name: SPI
 
