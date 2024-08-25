@@ -23,7 +23,6 @@ jobs:
           sketch-paths: |
             - ./
           libraries: |
-            - name: Wire
             - name: NetworkClientSecure
             - name: Networking
             - name: WiFi
