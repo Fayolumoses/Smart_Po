@@ -19,6 +19,22 @@ jobs:
       - name: Set up Arduino CLI
         uses: arduino/compile-sketches@v1
         with:
-          fqbn: esp32:esp32:esp32
+          fqbn: esp32:esp32:adafruit_feather_esp32_v2
           sketch-paths: |
             - ./
+          libraries: |
+            - name: Wire
+            - name: NetworkClientSecure
+            - name: Networking
+            - name: WiFi
+            - name: HTTPClient
+            - name: Adafruit NeoPixel
+            - name: LiquidCrystal I2C
+            - name: WebServer
+            - name: FS
+            - name: Adafruit SHT4x Library
+            - name: Adafruit BusIO
+            - name: Adafruit Unified Sensor
+            - name: SparkFun SGP30 Arduino Library
+            - name: SPI
+
