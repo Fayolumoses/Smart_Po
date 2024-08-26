@@ -15,6 +15,7 @@ void setup(){
 
     wifi_router wifi_details;
     if(getSavedWifiDetails(&wifi_details) != 0){
+        while(1) {}
     }
 
     lcd_progressbar("Loading...",10, 20);
