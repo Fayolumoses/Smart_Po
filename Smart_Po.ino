@@ -15,12 +15,14 @@ void setup(){
 
     wifi_router wifi_details;
     if(getSavedWifiDetails(&wifi_details) != 0){
+        display(Dev_Info(), WIFI_DETAILS_ERROR);
         while(1) {}
     }
 
     lcd_progressbar("Loading...",10, 20);
 
     if(init_sensors() != 0){
+        display(Dev_Info(), INIT_FAILURE);
         while(1) {}
     }
 
