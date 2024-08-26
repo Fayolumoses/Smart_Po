@@ -1,5 +1,9 @@
 #include "inc/utils.h"
 
+WiFiClient client;
+HTTPClient http;
+const char * url = "";
+
 void setup(){
     Serial.begin(115200);
     setAppVersion(1,0,0, Dev_Info());
@@ -11,13 +15,13 @@ void setup(){
 
     wifi_router wifi_details;
     if(getSavedWifiDetails(&wifi_details) != 0){
-        Serial.println("Error Retrieving Wifi Details. Please Restart");
+        while(1) {}
     }
 
     lcd_progressbar("Loading...",10, 20);
 
     if(init_sensors() != 0){
-        Serial.println("Error: Sensor not present. Please Check Connection and Restart");
+        while(1) {}
     }
 
     lcd_progressbar("Loading...",30, 20);
@@ -26,8 +30,7 @@ void setup(){
     init_pixel();
     lcd_progressbar("Loading...",65, 20);
 
-    if(!Wifi_Connect((char*)wifi_details.ssid.c_str(), (char*)wifi_details.pass.c_str(),LED_BUILTIN)){
-        Serial.println("Could not connect to Wifi");
+    if(!Wifi_Connect(const_cast<char*>(wifi_details.ssid.c_str()), const_cast<char*>(wifi_details.pass.c_str()),LED_BUILTIN)){
         displayWifiConnectFailed(wifi_details.ssid);
         delay(500);
       }
@@ -47,5 +50,18 @@ void setup(){
 }
 
 void loop(){
+    display(Dev_Info(),READ_DATA);
+    _sensors sense;
+    read_all_sensors(&sense);
+
+    http.begin(client, url);
+    http.addHeader("Content-Type", "application/json");
+    display(Dev_Info(),UPLOADING_DATA);
+
+    int httpResponseCode = http.POST(encodeSensorData(sense));
+
+    if(httpResponseCode  == 200) display(Dev_Info(),DATA_UPLOADED);
+    else display(Dev_Info(),UPLOADING_FAILED);
+    delay(5000);
 
 }

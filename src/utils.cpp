@@ -12,6 +12,7 @@ LiquidCrystal_I2C lcd(0x27,20,4);
 _sensors sensor;
 H2S_data h2s_data;
 SGP30 mySensor;
+GasBreakout::Reading reading;
 
 
 String encodeSensorData(_sensors sensor){
@@ -261,20 +262,20 @@ double map_float(int value, int from_high, int from_low, double to_high, double 
   return res + to_low;
 }
 
-void display(dev_info *d, LiquidCrystal_I2C lcd, int read){
+void display(dev_info *d, enum MESSAGE_TYPE read){
     String app_ver = "V"+ d->appVersion;
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("       NODE 2     ");
-  lcd.setCursor((int)((20- app_ver.length())/2),1);
-  lcd.print(app_ver);
-  lcd.setCursor(4,2);
-  lcd.print(d->ipAddress);
-  lcd.setCursor(0, 3);
-  if(read == 0) lcd.print("    Reading Data  ");
-  else if(read == 1) lcd.print("   Uploading Data ");
-  else if(read == 2) lcd.print("    Data Uploaded ");
-  else if(read == 3) lcd.print("    Uploading Failed");
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("       NODE 2     ");
+    lcd.setCursor((int)((20- app_ver.length())/2),1);
+    lcd.print(app_ver);
+    lcd.setCursor(4,2);
+    lcd.print(d->ipAddress);
+    lcd.setCursor(0, 3);
+    if(read == READ_DATA) lcd.print("    Reading Data  ");
+    else if(read == UPLOADING_DATA) lcd.print("   Uploading Data ");
+    else if(read == DATA_UPLOADED) lcd.print("    Data Uploaded ");
+    else if(read == UPLOADING_FAILED) lcd.print("    Uploading Failed");
 }
 
 void readWifiDetails(String data_in, wifi_router * wr){
@@ -327,4 +328,17 @@ void display_message(String message){
 
 IPAddress get_ip_address(){
   return WiFi.localIP();
+}
+
+void read_all_sensors(_sensors * s){
+  delay(1000);
+  read_sht_data(s);
+  read_H2S_data(s,h2s_data);
+  mySensor.measureAirQuality();
+  reading = gas.readAll();
+  s->reducing = reading.reducing;
+  s->nh3 = reading.nh3;
+  s->oxidising = reading.oxidising;
+  s->CO2 = mySensor.CO2;
+  s->TVOC = mySensor.TVOC;
 }

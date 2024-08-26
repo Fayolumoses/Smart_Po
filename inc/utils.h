@@ -8,6 +8,9 @@
 #include "SparkFun_SGP30_Arduino_Library.h" 
 #include "GasBreakout.h"
 #include "Device_Info.h"
+#include <WiFiClientSecure.h>
+#include <WiFiClient.h>
+#include <HTTPClient.h>
 
 
 
@@ -17,6 +20,12 @@
 #endif
 
 
+enum MESSAGE_TYPE {
+  READ_DATA,
+  UPLOADING_DATA,
+  DATA_UPLOADED,
+  UPLOADING_FAILED
+};
 
 typedef struct {
   float temperature;
@@ -57,7 +66,7 @@ typedef struct{
   void read_H2S_data(_sensors * sensor, H2S_data h2s);
   void initialise_H2S_sensor(H2S_data * h2s);
   double map_float(int value, int from_high, int from_low, double to_high, double to_low);
-  void display(dev_info *d, LiquidCrystal_I2C lcd, int read);
+  void display(dev_info *d, enum MESSAGE_TYPE read);
   void readWifiDetails(String data_in, wifi_router * wr);
   int getSavedWifiDetails(wifi_router * current_router);
   void clear_screen();
@@ -65,5 +74,6 @@ typedef struct{
   void display_connection_status(bool isConnected);
   void display_message(String message);
   IPAddress get_ip_address();
+  void read_all_sensors(_sensors * s);
   
 #endif
