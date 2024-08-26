@@ -15,13 +15,12 @@ void setup(){
 
     wifi_router wifi_details;
     if(getSavedWifiDetails(&wifi_details) != 0){
-        Serial.println("Error Retrieving Wifi Details. Please Restart");
     }
 
     lcd_progressbar("Loading...",10, 20);
 
     if(init_sensors() != 0){
-        Serial.println("Error: Sensor not present. Please Check Connection and Restart");
+        while(1) {}
     }
 
     lcd_progressbar("Loading...",30, 20);
@@ -31,7 +30,6 @@ void setup(){
     lcd_progressbar("Loading...",65, 20);
 
     if(!Wifi_Connect(const_cast<char*>(wifi_details.ssid.c_str()), const_cast<char*>(wifi_details.pass.c_str()),LED_BUILTIN)){
-        Serial.println("Could not connect to Wifi");
         displayWifiConnectFailed(wifi_details.ssid);
         delay(500);
       }
