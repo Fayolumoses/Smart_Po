@@ -272,10 +272,25 @@ void display(dev_info *d, enum MESSAGE_TYPE read){
     lcd.setCursor(4,2);
     lcd.print(d->ipAddress);
     lcd.setCursor(0, 3);
-    if(read == READ_DATA) lcd.print("    Reading Data  ");
-    else if(read == UPLOADING_DATA) lcd.print("   Uploading Data ");
-    else if(read == DATA_UPLOADED) lcd.print("    Data Uploaded ");
-    else if(read == UPLOADING_FAILED) lcd.print("    Uploading Failed");
+    switch(read){
+      case READ_DATA:       lcd.print("    Reading Data  ");
+                            break;
+      case UPLOADING_DATA:  lcd.print("   Uploading Data ");
+                            break;
+      case DATA_UPLOADED:   lcd.print("    Data Uploaded ");
+                            break;
+      case UPLOADING_FAILED:lcd.print("    Uploading Failed");
+                            break;
+      case WIFI_DETAILS_ERROR:       lcd.print("WiFi Details Error  ");
+                            break;
+      case WIFI_NOT_CONNECTED:  lcd.print(" WiFi Not Connected ");
+                            break;
+      case WIFI_CONNECTED:   lcd.print("    WiFi Connected ");
+                            break;
+      case INIT_FAILURE:    lcd.print("    Init Failed");
+                            break;
+    }
+  
 }
 
 void readWifiDetails(String data_in, wifi_router * wr){
