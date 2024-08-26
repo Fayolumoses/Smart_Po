@@ -1,8 +1,10 @@
 #include "inc/utils.h"
+#include "inc/Server.h"
 
 WiFiClient client;
 HTTPClient http;
 const char * url = "";
+
 
 void setup(){
     Serial.begin(115200);
@@ -48,6 +50,8 @@ void setup(){
 
     Dev_InfosetIpAddress(get_ip_address(), Dev_Info());
     lcd_progressbar("Loading...",80, 20);
+    start_server();
+    lcd_progressbar("Loading...",100, 20);
 
 }
 
