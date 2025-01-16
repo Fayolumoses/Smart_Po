@@ -6,7 +6,7 @@ HTTPClient http;
 const char * url = "";
 
 
-void setup(){
+void main{
     Serial.begin(115200);
     setAppVersion(1,0,0, Dev_Info());
 
@@ -53,21 +53,21 @@ void setup(){
     start_server();
     lcd_progressbar("Loading...",100, 20);
 
-}
 
-void loop(){
-    display(Dev_Info(),READ_DATA);
-    _sensors sense;
-    read_all_sensors(&sense);
+    while(1){
+        display(Dev_Info(),READ_DATA);
+        _sensors sense;
+        read_all_sensors(&sense);
 
-    http.begin(client, url);
-    http.addHeader("Content-Type", "application/json");
-    display(Dev_Info(),UPLOADING_DATA);
+        http.begin(client, url);
+        http.addHeader("Content-Type", "application/json");
+        display(Dev_Info(),UPLOADING_DATA);
 
-    int httpResponseCode = http.POST(encodeSensorData(sense));
+        int httpResponseCode = http.POST(encodeSensorData(sense));
 
-    if(httpResponseCode  == 200) display(Dev_Info(),DATA_UPLOADED);
-    else display(Dev_Info(),UPLOADING_FAILED);
-    delay(5000);
+        if(httpResponseCode  == 200) display(Dev_Info(),DATA_UPLOADED);
+        else display(Dev_Info(),UPLOADING_FAILED);
+        delay(5000);
 
+    }
 }

@@ -94,10 +94,6 @@ void handleSubmit() {
                   <h2>Wifi Settings Saved</h2>\
                   ";
   if (server.args() > 0) {
-    // for (uint8_t i = 0; i < server.args(); i++) {
-    //   message += "<li>" + server.argName(i) + ": " + server.arg(i) + "</li>";
-      
-    // }
     File file = SPIFFS.open("/wifi_settings.txt", "w");
     if (!file) {
       Serial.println("Failed to open file for writing");
